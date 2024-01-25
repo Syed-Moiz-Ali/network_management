@@ -7,19 +7,31 @@ import 'internetBlock/blackhole_vpn.dart';
 void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); //Add this for using flutter plugin before runApp()
-  final isVpnActive = await isActive(); //Get if vpn active or not
-  final apps = await getApps(); //Get installed apps
-  runApp(MyApp(
-    isVpnActive: isVpnActive,
-    installedApps: apps,
-  ));
+//Get installed apps
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp(
-      {super.key, required this.isVpnActive, required this.installedApps});
-  final bool isVpnActive;
-  final List<App> installedApps;
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late bool? isVpnActive;
+  late List<App>? installedApps;
+  @override
+  void initState() {
+    super.initState();
+    fetch();
+  }
+
+  fetch() async {
+    setState(() {});
+    isVpnActive = await isActive(); //Get if vpn active or not
+    installedApps = await getApps();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +41,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ExampleApp(
-        isVpnActive: isVpnActive,
-        installedApps: installedApps,
-      ),
+      home: installedApps != null || isVpnActive == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ExampleApp(
+              isVpnActive: isVpnActive!,
+              installedApps: installedApps!,
+            ),
     );
   }
 }

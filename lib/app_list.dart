@@ -2,7 +2,6 @@ import 'dart:developer' show log;
 
 import 'package:flutter/material.dart';
 
-import 'internetBlock/app_model.dart';
 import 'internetBlock/blackhole_vpn.dart';
 
 class MyAppList extends StatefulWidget {
